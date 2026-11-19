@@ -23,7 +23,13 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '9.2.1'
+          gradle-version: '9.6.0'
+
+      - name: Fix Minecraft 26.3 configuration
+        run: |
+          PROJECT_DIR=$(dirname "$(find project -name build.gradle -print -quit)")
+          sed -i 's/loom_version=.*/loom_version=1.17/' "$PROJECT_DIR/gradle.properties"
+          sed -i '/mappings loom\.officialMojangMappings()/d; s/modImplementation /implementation /g' "$PROJECT_DIR/build.gradle"
 
       - name: Build mod
         run: |
